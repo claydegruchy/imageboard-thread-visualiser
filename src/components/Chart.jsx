@@ -146,7 +146,7 @@ const Chart = (props) => {
       zoom={2}
       style={{
         width: '100%',
-        height: '600px',
+        height: '99vh',
         backgroundColor: colours.background,
       }}
       minZoom={0.2}
