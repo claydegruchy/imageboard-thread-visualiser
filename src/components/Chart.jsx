@@ -149,7 +149,7 @@ const Chart = (props) => {
         height: '600px',
         backgroundColor: colours.background,
       }}
-      minZoom={0.5}
+      minZoom={0.2}
       maxZoom={5}
       elements={CytoscapeComponent.normalizeElements(Thread({ threadData }))}
       layout={layout}

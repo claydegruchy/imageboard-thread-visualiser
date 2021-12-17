@@ -89,6 +89,7 @@ const Thread = ({ threadData }) => {
   };
 
   var findReplies = (post) => {
+    // console.log(post);
     var classes = [];
     // no comment or reply
     if (!post.com) return [];
@@ -107,6 +108,7 @@ const Thread = ({ threadData }) => {
 
     var replies = [];
     for (var ele of possibleReplies) {
+      if (ele.props?.href.includes('/')) continue;
       replies.push(ele.props?.href.replace('#p', ''));
     }
 
@@ -129,6 +131,7 @@ const Thread = ({ threadData }) => {
 
     edges = [...edges, ...findReplies(post)];
   }
+
 
   return { nodes, edges };
 };
