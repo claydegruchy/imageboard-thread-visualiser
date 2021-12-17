@@ -53,13 +53,27 @@ const MakePopup = (node) => {
 
 const Chart = (props) => {
   const [threadData, setThreadData] = useState();
+  const params = new URLSearchParams(window.location.search);
 
   useEffect(() => {
     let defaultFilters = {};
 
-    getThread({ site: '4chan', board: 'ck', thread: '17130545' }).then(
-      setThreadData
-    );
+    console.log({ ...params });
+
+    var thread = params.get('thread');
+    var site = params.get('site') || '4chan';
+
+    var [thread, , board] = thread.split('/').reverse();
+
+    var url = {
+      site,
+      thread,
+      board,
+    };
+    if ([site, board, thread].includes(undefined))
+      url = { site: '4chan', board: 'ck', thread: '17130545' };
+    console.log('Calling', url);
+    getThread(url).then(setThreadData);
   }, []);
 
   if (!threadData) return <b>Loading!</b>;

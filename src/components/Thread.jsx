@@ -99,6 +99,8 @@ const Thread = ({ threadData }) => {
     if (typeof postHTML === 'string' || postHTML instanceof String)
       return indirectOpReply(post);
 
+    if (!Array.isArray(postHTML)) postHTML = [postHTML];
+
     var possibleReplies = postHTML.filter((e) => e.type == 'a');
 
     if (possibleReplies.length < 1) return indirectOpReply(post);
