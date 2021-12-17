@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
+
 import CytoscapeComponent from 'react-cytoscapejs';
 import Cytoscape from 'cytoscape';
 import popper from 'cytoscape-popper';
+import Poppercontainer from './Poppercontainer';
 
 import { useState, useEffect } from 'react';
 import { Thread, getThread } from './Thread';
@@ -32,6 +35,20 @@ var layout = {
     edgeSpacingFactor: 0.1,
     // crossingMinimization: 'INTERACTIVE',
   },
+};
+
+const MakePopup = (node) => {
+  return node.popper({
+    content: () => {
+      let div = document.createElement('div');
+      // this is stupid
+      div.innerHTML = ReactDOMServer.renderToStaticMarkup(
+        <Poppercontainer node={node} colours={colours} />
+      );
+      document.body.appendChild(div);
+      return div;
+    },
+  });
 };
 
 const Chart = (props) => {
@@ -67,7 +84,26 @@ const Chart = (props) => {
           this.outgoers().removeClass('neighbor-selected outgoing');
           this.successors().removeClass('neighbor-selected successor');
         });
-        cy.on('mouseover', 'node', function (event) {});
+
+        cy.on('mouseover', 'node', function (event) {
+          this.data('popper', MakePopup(this));
+        });
+
+        cy.on('mouseout', 'node', function (event) {
+          var p = this.data('popper');
+          if (p) {
+            p.destroy();
+            this.data('popper', undefined);
+          }
+        });
+
+        cy.on('node', 'position', function (event) {
+          cy.$('[?popper]').data('popper')?.update();
+        });
+
+        cy.on('pan zoom resize', function (event) {
+          cy.$('[?popper]').data('popper')?.update();
+        });
       }}
       zoom={2}
       style={{

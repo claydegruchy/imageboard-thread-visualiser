@@ -39,6 +39,9 @@ var colours = {
   reply: 'rgb(215,  218, 238)',
   name: 'rgb(54,  117, 72)',
   subject: 'rgb(28, 24,  98)',
+  quote: 'rgb(131, 155, 65)',
+
+    
 };
 
 const Chartstyle = [
