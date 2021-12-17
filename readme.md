@@ -10,6 +10,9 @@ just take a 4chan url and replace `https://boards.4channel.org/` with `https://c
 - which would make:
 - https://claydegruchy.github.io/imageboard-thread-visualiser/dist/index?thread=ck/thread/17106389
 
+hovering a post will show the post. 
+
+clicking a post will select it, showing who replied to it, who it replied to, and the path back to OP from this post.
 
 # but... why
 :^)
