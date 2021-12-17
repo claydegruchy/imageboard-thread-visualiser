@@ -50,45 +50,72 @@ import parse from 'html-react-parser';
 const Thread = ({ threadData }) => {
   var { posts } = threadData;
 
-  const elements = [
-    // { data: { id: 'one', label: 'Node 1' }, position: { x: 0, y: 0 } },
-    // { data: { id: 'two', label: 'Node 2' }, position: { x: 100, y: 0 } },
-    // {
-    //   data: { source: 'one', target: 'two', label: 'Edge from Node1 to Node2' },
-    // },
-  ];
+  var OP = posts.find((post) => post.resto == 0);
 
-  var makeNode = (post) => ({
-    data: {
-      id: post.no,
-      label: post.name,
-    },
-  });
+  const elements = [];
 
-  var makeEdge = (reply) => ({
+  var makeNode = (post) => {
+    var classes = [];
+    if (post == OP) classes.push('OP');
+    if (post.filename) classes.push('hasImage');
+    return {
+      classes,
+      data: {
+        ...post,
+        id: post.no,
+        label: post.name,
+      },
+    };
+  };
+
+  var makeEdge = (reply, c) => ({
+    classes: c,
     data: {
       weight: 1,
-      source: reply.source,
-      target: reply.target,
+      ...reply,
     },
   });
 
+  var indirectOpReply = (post) => {
+    return [
+      makeEdge(
+        {
+          source: post.no,
+          target: OP.no,
+        },
+        ['noReply']
+      ),
+    ];
+  };
+
   var findReplies = (post) => {
+    var classes = [];
+    // no comment or reply
     if (!post.com) return [];
+
     var postHTML = parse(post.com);
-    if (typeof postHTML === 'string' || postHTML instanceof String) return [];
+
+    // no replies to anyone
+    if (typeof postHTML === 'string' || postHTML instanceof String)
+      return indirectOpReply(post);
 
     var possibleReplies = postHTML.filter((e) => e.type == 'a');
+
+    if (possibleReplies.length < 1) return indirectOpReply(post);
+
     var replies = [];
     for (var ele of possibleReplies) {
       replies.push(ele.props?.href.replace('#p', ''));
     }
 
     return [...new Set(replies)].map((replyNo) =>
-      makeEdge({
-        source: post.no,
-        target: replyNo,
-      })
+      makeEdge(
+        {
+          source: post.no,
+          target: replyNo,
+        },
+        classes
+      )
     );
   };
 
