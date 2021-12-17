@@ -135,7 +135,9 @@ const Thread = ({ threadData }) => {
 
 const getThread = async ({ site, board, thread }) => {
   return await await fetch(
-    `http://localhost:5000/${site}/${board}/thread/${thread}.json`
+    // `http://localhost:5000/${site}/${board}/thread/${thread}.json`
+    // `http://localhost:5000/${site}/${board}/thread/${thread}.json`
+    `https://jsonp.afeld.me/?url=https%3A%2F%2Fa.4cdn.org%2F${board}%2Fthread%2F${thread}.json`
   ).then((r) => r.json());
 };
 

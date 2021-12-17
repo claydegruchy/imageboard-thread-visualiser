@@ -40,13 +40,31 @@ var layout = {
 const MakePopup = (node) => {
   return node.popper({
     content: () => {
-      let div = document.createElement('div');
-      // this is stupid
-      div.innerHTML = ReactDOMServer.renderToStaticMarkup(
-        <Poppercontainer node={node} colours={colours} />
+      var id = node.data('no');
+      // check if we have made this already
+
+      var find = document.querySelector(`#id-${id}`);
+
+      if (find) {
+        var ele = find;
+      } else {
+        // if not, make and return
+        let div = document.createElement('div');
+        div.id = `id-${id}`;
+        div.className = 'pop';
+        // this is stupid
+        div.innerHTML = ReactDOMServer.renderToStaticMarkup(
+          <Poppercontainer node={node} colours={colours} />
+        );
+        document.body.appendChild(div);
+        var ele = div;
+      }
+      [...document.querySelectorAll(`.pop`)].forEach((c) =>
+        c.classList.add('hidden')
       );
-      document.body.appendChild(div);
-      return div;
+
+      ele.classList.remove('hidden');
+      return ele;
     },
   });
 };
@@ -61,17 +79,23 @@ const Chart = (props) => {
     console.log({ ...params });
 
     var thread = params.get('thread');
-    var site = params.get('site') || '4chan';
 
-    var [thread, , board] = thread.split('/').reverse();
+    if (thread) {
+      var site = params.get('site') || '4chan';
 
-    var url = {
-      site,
-      thread,
-      board,
-    };
-    if ([site, board, thread].includes(undefined))
-      url = { site: '4chan', board: 'ck', thread: '17130545' };
+      var [thread, , board] = thread.split('/').reverse();
+
+      var url = {
+        site,
+        thread,
+        board,
+      };
+      if ([site, board, thread].includes(undefined))
+        url = { site: '4chan', board: 'ck', thread: '17130545' };
+    } else {
+      var url = { site: '4chan', board: 'ck', thread: '17130545' };
+    }
+
     console.log('Calling', url);
     getThread(url).then(setThreadData);
   }, []);

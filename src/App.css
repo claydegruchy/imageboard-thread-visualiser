@@ -1,3 +1,7 @@
 .quote {
   color: rgb(131, 155, 65);
 }
+
+.hidden {
+  display: none;
+}
