@@ -1,5 +1,5 @@
-import React from 'react';
-import parse from 'html-react-parser';
+import React from "react";
+import parse from "html-react-parser";
 
 // function makeElements(systems, connections) {
 //   console.log(
@@ -56,8 +56,8 @@ const Thread = ({ threadData }) => {
 
   var makeNode = (post) => {
     var classes = [];
-    if (post == OP) classes.push('OP');
-    if (post.filename) classes.push('hasImage');
+    if (post == OP) classes.push("OP");
+    if (post.filename) classes.push("hasImage");
     return {
       classes,
       data: {
@@ -83,7 +83,7 @@ const Thread = ({ threadData }) => {
           source: post.no,
           target: OP.no,
         },
-        ['noReply']
+        ["noReply"]
       ),
     ];
   };
@@ -97,19 +97,19 @@ const Thread = ({ threadData }) => {
     var postHTML = parse(post.com);
 
     // no replies to anyone
-    if (typeof postHTML === 'string' || postHTML instanceof String)
+    if (typeof postHTML === "string" || postHTML instanceof String)
       return indirectOpReply(post);
 
     if (!Array.isArray(postHTML)) postHTML = [postHTML];
 
-    var possibleReplies = postHTML.filter((e) => e.type == 'a');
+    var possibleReplies = postHTML.filter((e) => e.type == "a");
 
     if (possibleReplies.length < 1) return indirectOpReply(post);
 
     var replies = [];
     for (var ele of possibleReplies) {
-      if (ele.props?.href.includes('/')) continue;
-      replies.push(ele.props?.href.replace('#p', ''));
+      if (ele.props?.href.includes("/")) continue;
+      replies.push(ele.props?.href.replace("#p", ""));
     }
 
     return [...new Set(replies)].map((replyNo) =>
@@ -132,15 +132,15 @@ const Thread = ({ threadData }) => {
     edges = [...edges, ...findReplies(post)];
   }
 
-
   return { nodes, edges };
 };
 
 const getThread = async ({ site, board, thread }) => {
+  console.log("getting,...", { board, thread});
   return await await fetch(
     // `http://localhost:5000/${site}/${board}/thread/${thread}.json`
-    // `http://localhost:5000/${site}/${board}/thread/${thread}.json`
-    `https://jsonp.afeld.me/?url=https%3A%2F%2Fa.4cdn.org%2F${board}%2Fthread%2F${thread}.json`
+    `http://localhost:5001/${site}/${board}/thread/${thread}.json`
+    // `http://localhost:8080/${board}/thread/${thread}.json`
   ).then((r) => r.json());
 };
 

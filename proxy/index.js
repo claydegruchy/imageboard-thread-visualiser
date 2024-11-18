@@ -6,7 +6,7 @@ var fetch = require('node-fetch');
 // https://a.4cdn.org/
 
 const app = express();
-const port = 5000;
+const port = 5001;
 
 // Fuck I hate cors
 app.options('*', cors());
